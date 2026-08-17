@@ -27,10 +27,10 @@ app.get("/", (req, res) => {
 
 // Middleware
 app.use(cors({
-    origin: "http://localhost:5173",
-    credentials: true,
-  })
-);
+  origin: "https://documind-ai-cyan.vercel.app",
+  credentials: true,
+}));
+
 app.use(express.json());
 app.use(clerkMiddleware());
 app.use(syncUser);
