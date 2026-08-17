@@ -248,7 +248,7 @@ Documind AI/
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/Documind-AI.git
+git clone https://github.com/priyanshu9878/DocuMind-AI.git
 cd Documind-AI
 ```
 
