@@ -27,7 +27,11 @@ app.get("/", (req, res) => {
 
 // Middleware
 app.use(cors({
-  origin: "https://documind-ai-cyan.vercel.app",
+  origin: [
+    "http://localhost:5173",
+    "https://documind-ai-cyan.vercel.app",
+    "https://documind-ai-git-main-priyanshu-p-projects14.vercel.app",
+  ],
   credentials: true,
 }));
 
