@@ -21,6 +21,10 @@ import {HumanMessage,AIMessage, SystemMessage} from "@langchain/core/messages";
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+app.get("/", (req, res) => {
+  res.send("DocuMind AI Backend Running");
+});
+
 // Middleware
 app.use(cors({
     origin: "http://localhost:5173",
@@ -464,10 +468,6 @@ try {
   process.exit(1);
 }
 
-// Test Route
-app.get("/", (req, res) => {
-  res.send("DocuMind AI Backend Running");
-});
 
 app.use((err, req, res, next) => {
   console.error(" GLOBAL ERROR:", err);
