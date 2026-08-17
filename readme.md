@@ -5,12 +5,18 @@
 ### <span style="color:#a1a1aa;">AI-Powered PDF Interaction & RAG Assistant</span>
 
 <p>
-  <strong>Upload a PDF.</strong>  
-  <strong>Ask questions.</strong>  
+  <strong>Upload a PDF.</strong>&nbsp;&nbsp;
+  <strong>Ask questions.</strong>&nbsp;&nbsp;
   <strong>Get intelligent, context-grounded answers.</strong>
 </p>
 
 <br>
+
+<a href="https://documind-ai-git-main-priyanshu-p-projects14.vercel.app">
+  <img src="https://img.shields.io/badge/🚀%20Live%20Demo-22c55e?style=for-the-badge&logo=vercel&logoColor=white" />
+</a>
+
+<br><br>
 
 <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" />
 <img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white" />
@@ -22,11 +28,7 @@
 
 <br><br>
 
-<a href="#-features">Features</a> •
-<a href="#-tech-stack">Tech Stack</a> •
-<a href="#-how-it-works">How It Works</a> •
-<a href="#-installation">Installation</a> •
-<a href="#-environment-variables">Environment Variables</a>
+<a href="#-features">Features</a> • <a href="#-tech-stack">Tech Stack</a> • <a href="#-how-it-works">How It Works</a> • <a href="#-installation">Installation</a> • <a href="#-environment-variables">Environment Variables</a>
 
 </div>
 
@@ -392,7 +394,7 @@ This allows queries to be filtered to the authenticated user's document.
 * [ ] Streaming AI responses
 * [ ] File sharing
 * [ ] Advanced chat search
-* [ ] Production deployment
+* [x] Production deployment
 * [ ] Usage analytics
 * [ ] Subscription / billing system
 
