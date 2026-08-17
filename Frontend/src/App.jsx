@@ -16,7 +16,7 @@ import {
   Navigate,
 } from "react-router-dom";
 
-import LandingPage from "./pages/LandingPage.jsx";
+import LandingPage from "./pages/Landingpage.jsx";
 import Dashboard from "./components/Dashboard.jsx";
 import ChatPage from "./chatPage.jsx";
 
