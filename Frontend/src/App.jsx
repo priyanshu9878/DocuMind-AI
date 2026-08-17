@@ -6,6 +6,7 @@ import {
   UserButton,
   useAuth,
 } from "@clerk/clerk-react";
+const API_URL = import.meta.env.VITE_API_URL;
 
 import { useEffect } from "react";
 import {
@@ -29,7 +30,7 @@ function SyncUser() {
 
         if (!token) return;
 
-        await fetch("http://localhost:3000/api/me", {
+        await fetch(`${API_URL}/api/me`, {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,

@@ -4,6 +4,7 @@ import FileCard from "../components/FileCard.jsx";
 import { UploadCloud } from "lucide-react";
 import Landingpage from "../pages/Landingpage.jsx";
 import { useNavigate } from "react-router-dom";
+const API_URL = import.meta.env.VITE_API_URL;
 
 import { useEffect, useState } from "react";
 import { useAuth } from "@clerk/clerk-react";
@@ -27,7 +28,7 @@ export default function Dashboard() {
       const token = await getToken();
 
       const res = await fetch(
-        "http://localhost:3000/files",
+        `${API_URL}/files`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -66,7 +67,7 @@ const uploadPdf = async () => {
     formData.append("pdf", selectedFile);
 
     const res = await fetch(
-      "http://localhost:3000/upload",
+      `${API_URL}/upload`,
       {
         method: "POST",
         headers: {
@@ -103,7 +104,7 @@ const deleteFile = async (id) => {
     const token = await getToken();
 
     await fetch(
-      `http://localhost:3000/files/${id}`,
+      `${API_URL}/files/${id}`,
       {
         method: "DELETE",
         headers: {

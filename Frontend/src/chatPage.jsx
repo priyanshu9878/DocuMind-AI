@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useAuth } from "@clerk/clerk-react";
 import { useState, useEffect } from "react";
+const API_URL = import.meta.env.VITE_API_URL;
 
 export default function ChatPage() {
   const { fileId } = useParams();
@@ -25,7 +26,7 @@ const loadChatHistory = async () => {
   const token = await getToken();
 
   const res = await fetch(
-    `http://localhost:3000/chat/${fileId}`,
+    `${API_URL}/chat/${fileId}`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -50,7 +51,7 @@ const askQuestion = async () => {
   const token = await getToken();
 
   const res = await fetch(
-    "http://localhost:3000/chat",
+    `${API_URL}/chat`,
     {
       method: "POST",
       headers: {

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@clerk/clerk-react";
 import { useNavigate } from "react-router-dom";
+const API_URL = import.meta.env.VITE_API_URL;
 
 export default function UploadDashboard() {
      const navigate = useNavigate();
@@ -13,7 +14,7 @@ export default function UploadDashboard() {
     const token = await getToken();
 
     const res = await fetch(
-      "http://localhost:3000/files",
+      `${API_URL}/files`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -44,7 +45,7 @@ export default function UploadDashboard() {
     formData.append("pdf", file);
 
     const res = await fetch(
-      "http://localhost:3000/upload",
+      `${API_URL}/upload`,
       {
         method: "POST",
         headers: {

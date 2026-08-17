@@ -2,6 +2,7 @@ import { Upload, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useRef } from "react";
 import { useAuth } from "@clerk/clerk-react";
+const API_URL = import.meta.env.VITE_API_URL;
 
 export default function Hero() {
   const navigate = useNavigate();
@@ -36,7 +37,7 @@ export default function Hero() {
       formData.append("pdf", file);
 
       const res = await fetch(
-        "http://localhost:3000/upload",
+        `${API_URL}/upload`,
         {
           method: "POST",
           headers: {
