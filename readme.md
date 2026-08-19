@@ -74,6 +74,10 @@ Clerk authentication protects application features and API endpoints.
 
 Users can access only their own uploaded PDFs and conversations.
 
+### ⚡ Usage Rate Limiting
+
+Redis-based per-user rate limiting allows **5 chat requests every 6 hours**, helping protect API resources and prevent excessive usage.
+
 ### 📚 RAG Pipeline
 
 Retrieval-Augmented Generation provides document-grounded responses.
@@ -187,6 +191,54 @@ const file = await File.findOne({
 ```
 
 This prevents one authenticated user from accessing another user's PDF using a different `fileId`.
+
+---
+
+## ⚡ API Usage & Rate Limiting
+
+DocuMind AI uses **Redis-based per-user rate limiting** to control access to AI chat requests and help minimize excessive API usage.
+
+### Usage Policy
+
+| Limit | Value |
+|------|------:|
+| 💬 Chat requests | **5 requests** |
+| ⏱️ Reset window | **6 hours** |
+| 👤 Applied per user | **Yes** |
+| ⚡ Storage | **Redis** |
+
+Each authenticated Clerk user receives **5 AI chat requests every 6 hours**.
+
+Once the limit is reached, the user receives a friendly usage message and can continue using the AI assistant after the 6-hour window expires.
+
+### Rate Limiting Flow
+
+```text
+User
+ ↓
+Clerk Authentication
+ ↓
+Chat Request
+ ↓
+Redis Rate Limiter
+ ↓
+ ┌───────────────────────┐
+ │ Requests < 5          │
+ │       ↓               │
+ │   Allow Request       │
+ └───────────┬───────────┘
+             │
+             ▼
+        Gemini API
+
+Requests >= 5
+       ↓
+   Reject Request
+       ↓
+   HTTP 429
+       ↓
+"That's it for now!
+ Come back later."
 
 ### Protected operations
 
@@ -395,6 +447,7 @@ This allows queries to be filtered to the authenticated user's document.
 * [ ] File sharing
 * [ ] Advanced chat search
 * [x] Production deployment
+* [x] Per-user API rate limiting
 * [ ] Usage analytics
 * [ ] Subscription / billing system
 
