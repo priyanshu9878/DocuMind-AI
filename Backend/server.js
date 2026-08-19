@@ -12,11 +12,12 @@ import { syncUser } from "./middleware/syncUser.js";
 import upload from "./middleware/upload.js";
 import {indexing} from "./indexing.js";
 import Chat from "./models/chat.js";
-
+import { rateLimiter } from "./middleware/ratelimiter.js";
 import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import { GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
 import { Pinecone } from "@pinecone-database/pinecone";
 import {HumanMessage,AIMessage, SystemMessage} from "@langchain/core/messages";
+import {RedisClient} from "./config/redis.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -143,7 +144,7 @@ app.get("/files", async (req, res) => {
   }
 });
 
-app.post("/chat", async (req, res) => {
+app.post("/chat",rateLimiter, async (req, res) => {
   try {
     // =========================
     // Authentication
@@ -462,6 +463,9 @@ app.delete("/files/:id", async (req, res) => {
     });
   }
 });
+
+await RedisClient.connect();
+console.log("Redis connected:", RedisClient.isReady);
 
 // MongoDB Connection
 try {

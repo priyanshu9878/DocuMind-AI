@@ -5,7 +5,7 @@ export const syncUser = async (req, res, next) => {
   try {
     const { userId } = getAuth(req);
 
-    console.log("SYNC USER ID:", userId);
+   // console.log("SYNC USER ID:", userId);
 
     // User is not logged in
     if (!userId) {
@@ -17,7 +17,7 @@ export const syncUser = async (req, res, next) => {
       clerkId: userId,
     });
 
-    console.log("EXISTING USER:", existingUser ? "YES" : "NO");
+  //  console.log("EXISTING USER:", existingUser ? "YES" : "NO");
 
     // User already exists
     if (existingUser) {
@@ -25,12 +25,12 @@ export const syncUser = async (req, res, next) => {
     }
 
     // User doesn't exist → get user from Clerk
-    console.log("Fetching user from Clerk:", userId);
+   // console.log("Fetching user from Clerk:", userId);
 
     const clerkUser =
       await clerkClient.users.getUser(userId);
 
-    console.log("Clerk user fetched:", clerkUser.id);
+   // console.log("Clerk user fetched:", clerkUser.id);
 
     // Create MongoDB user
     const user = await User.create({
@@ -43,7 +43,7 @@ export const syncUser = async (req, res, next) => {
         }`.trim(),
     });
 
-    console.log("✅ MongoDB user created:", user._id);
+   // console.log("✅ MongoDB user created:", user._id);
 
     return next();
 

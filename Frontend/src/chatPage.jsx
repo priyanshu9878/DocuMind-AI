@@ -13,6 +13,7 @@ console.log("current url =", window.location.pathname);
   const [question, setQuestion] = useState("");
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [rateLimited, setRateLimited] = useState(false);
 
   useEffect(() => {
     console.log(
@@ -35,6 +36,19 @@ const loadChatHistory = async () => {
   );
 
   const data = await res.json();
+  if (res.status === 429) {
+    setMessages((prev) => [
+        ...prev,
+        {
+            role: "assistant",
+            content: `That's it for now! \n\nYou've used your limit of 5 free questions for this period.. Come back in about ${data.remainingTime}.`,
+        },
+    ]);
+
+    setQuestion("");
+    setLoading(false);
+    return;
+}
 
   setMessages(data.messages || []);
 };
@@ -44,15 +58,14 @@ const clearChat = async () => {
 };
 
 const askQuestion = async () => {
-  if (!question.trim()) return;
+  if (!question.trim() || rateLimited) return;
 
   setLoading(true);
 
-  const token = await getToken();
+  try {
+    const token = await getToken();
 
-  const res = await fetch(
-    `${API_URL}/chat`,
-    {
+    const res = await fetch(`${API_URL}/chat`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -62,31 +75,66 @@ const askQuestion = async () => {
         fileId,
         question,
       }),
+    });
+
+    const data = await res.json();
+
+    // 🚫 Rate limit reached
+    if (res.status === 429) {
+      setRateLimited(true);
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          content: `That's it for now! \n\nYou've reached your limit of 5 questions for this period. Come back in about ${data.remainingTime}.`,
+        },
+      ]);
+
+      setQuestion("");
+      return;
     }
-  );
 
-  const data = await res.json();
+    // Other errors
+    if (!res.ok) {
+      throw new Error(data.message || "Something went wrong");
+    }
 
-  setMessages((prev) => [
-    ...prev,
-    {
-      role: "user",
-      content: question,
-    },
-    {
-      role: "assistant",
-      content: data.answer,
-    },
-  ]);
+    // Normal response
+    setMessages((prev) => [
+      ...prev,
+      {
+        role: "user",
+        content: question,
+      },
+      {
+        role: "assistant",
+        content: data.answer,
+      },
+    ]);
 
-  setQuestion("");
-  setLoading(false);
+    setQuestion("");
+
+  } catch (error) {
+    console.error("Chat error:", error);
+
+    setMessages((prev) => [
+      ...prev,
+      {
+        role: "assistant",
+        content: "Something went wrong. Please try again.",
+      },
+    ]);
+
+  } finally {
+    setLoading(false);
+  }
 };
 
-console.log("Sending:", {
-  fileId,
-  question,
-});
+// console.log("Sending:", {
+//   fileId,
+//   question,
+// });
 
   return (
   <div className="min-h-screen bg-black text-white flex flex-col ">
@@ -155,36 +203,36 @@ console.log("Sending:", {
       <div className="max-w-4xl mx-auto flex gap-3">
 
         <input
-          type="text"
-          value={question}
-          placeholder="Ask anything about this PDF..."
-          onChange={(e) =>
-            setQuestion(e.target.value)
-          }
-          className="
-            flex-1
-            bg-zinc-900
-            border border-zinc-800
-            rounded-xl
-            px-4 py-3
-            outline-none
-            focus:border-green-500
-          "
-        />
+  type="text"
+  value={question}
+  disabled={rateLimited}
+  placeholder={
+    rateLimited
+      ? "Come back later..."
+      : "Ask anything about this PDF..."
+  }
+  onChange={(e) => setQuestion(e.target.value)}
+  className="
+    flex-1 bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-3 outline-none focus:border-green-500 disabled:opacity-50 disabled:cursor-not-allowed "/>
 
         <button
-          onClick={askQuestion}
-          className="
-            px-6
-            py-3 h-10 w-24 
-            bg-green-600
-            hover:bg-green-500
-            rounded-xl
-            transition
-          "
-        >
-          Ask
-        </button>
+  onClick={askQuestion}
+  disabled={loading || rateLimited}
+  className="
+    px-6
+    py-3
+    h-10
+    w-24
+    bg-green-600
+    hover:bg-green-500
+    rounded-xl
+    transition
+    disabled:opacity-50
+    disabled:cursor-not-allowed
+  "
+>
+  {rateLimited ? "Limit" : loading ? "..." : "Ask"}
+</button>
 
       </div>
     </div>
